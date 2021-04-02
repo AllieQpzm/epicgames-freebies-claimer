@@ -164,6 +164,8 @@ function getToughCookie(cookie) {
             Logger.info(`Waiting ${delay} minutes`);
             await sleep(delay);
         } else {
+            Logger.info(`Waiting 1 minute before closing`);
+            await sleep(1);
             process.exit(0);
         }
     } while (loop);

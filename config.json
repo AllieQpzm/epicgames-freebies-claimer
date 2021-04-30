@@ -9,5 +9,7 @@
 	],
 	"options": {},
 	"delay": 1440,
-	"loop": true
+	"loop": true,
+	"useHealthchecks": false,
+	"healthcheckUrl": ""
 }

@@ -7,6 +7,7 @@ const Logger = require("tracer").console(`${__dirname}/logger.js`);
 const Package = require("./package.json");
 const TwoFactor = require("node-2fa");
 const Cookie = require('tough-cookie').Cookie;
+const https = require('https');
 
 const { freeGamesPromotions } = require('./src/gamePromotions');
 
@@ -50,7 +51,7 @@ function getToughCookie(cookie) {
         Logger.warn(`There is a new version available: ${Package.url}`);
     }
 
-    let { accounts, options, delay, loop } = Config;
+    let { accounts, options, delay, loop, useHealthchecks, healthcheckUrl } = Config;
     if (!options) {
         options = {};
     }
@@ -158,6 +159,19 @@ function getToughCookie(cookie) {
 
             await client.logout();
             Logger.info(`Logged ${client.account.name} out of Epic Games`);
+        }
+
+        if(useHealthchecks) {
+            if(healthcheckUrl != null) {
+                try {
+                    https.get(healthcheckUrl);
+                    Logger.info('Made call to healthcheck URL');
+                } catch (error) {
+                    Logger.error(error);
+                }
+            } else {
+                Logger.error('Health check URL hasn\'t been defined');
+            }
         }
 
         if (loop) {
